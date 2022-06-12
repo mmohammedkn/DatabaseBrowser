@@ -113,6 +113,11 @@ namespace DatabaseBrowser.DBHandlers
             throw new NotImplementedException();
         }
 
+        public List<string> GetUserNames()
+        {
+            throw new NotImplementedException();
+        }
+
         ~SQLiteHandler()
         {
             SQLiteConnection.Close();

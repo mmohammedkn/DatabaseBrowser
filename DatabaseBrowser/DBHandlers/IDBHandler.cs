@@ -23,5 +23,6 @@ namespace DatabaseBrowser.DBHandlers
         List<string> GetPackagesNames();
         string GetObjectSource(string objectName);
         void SaveChanges(DataTable dataTable);
+        List<string> GetUserNames();
     }
 }

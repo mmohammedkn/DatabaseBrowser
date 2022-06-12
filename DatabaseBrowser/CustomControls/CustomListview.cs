@@ -15,9 +15,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 using static DatabaseBrowser.CustomControls.CustomListview;
+
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DatabaseBrowser.CustomControls
 {

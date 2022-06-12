@@ -25,9 +25,21 @@ namespace DatabaseBrowser.DBHandlers
             ConStrBuilder = new OracleConnectionStringBuilder(connection.ConnectionString);
             OracleConnection = new OracleConnection(ConStrBuilder.ConnectionString);
 
+            OracleConnection.StateChange += OracleConnection_StateChange;
+            OracleConnection.InfoMessage += OracleConnection_InfoMessage;
             OracleConnection.Open();
 
             return OracleConnection;
+        }
+
+        private void OracleConnection_InfoMessage(object sender, OracleInfoMessageEventArgs eventArgs)
+        {
+            
+        }
+
+        private void OracleConnection_StateChange(object sender, StateChangeEventArgs e)
+        {
+            
         }
 
         public DataTable ExecuteSqlCommand(string sqlCommand)
@@ -79,6 +91,12 @@ namespace DatabaseBrowser.DBHandlers
                 .Select(x => x["view_name"].ToString()).ToList();
         }
 
+        public List<string> GetUserNames()
+        {
+            return ExecuteSqlCommand("SELECT * FROM DBA_USERS order by username").AsEnumerable()
+                            .Select(x => x["username"].ToString()).ToList();
+        }
+
         public List<string> GetObjectColumnNames(string objectName)
         {
             var columns = ExecuteSqlCommand("SELECT * FROM SYS.ALL_TAB_COLUMNS where TABLE_NAME = '" + objectName
@@ -97,19 +115,27 @@ namespace DatabaseBrowser.DBHandlers
 
         public DataTable GetObjectData(string objectName, int page, int itemCount, string type)
         {
-            var columns = GetObjectColumnNames(objectName);
+            var columns = new List<string>();// GetObjectColumnNames(objectName);
 
-            if (type == "Tables")
+            columns.Insert(0, "T.*");
+
+            if (type == "Table")
             {
                 columns.Insert(0, "ROWID row_id");
                 columns.Insert(0, "ROWNUM row_num");
             }
 
-            var query = ("select " + string.Join(",", columns) + " from " + objectName).Replace("'", '"' + "");
-            //var query = ("select * from (select " + string.Join(",", columns) + " from " + objectName + ") where row_num > " + ((page - 1) * itemCount) + " and row_num <= " + (page * itemCount)).Replace("'", '"' + "");
+            var query = ("select " + string.Join(",", columns) + " from " + objectName + " T").Replace("'", '"' + "");
+            //var query = ("select * from (select " + string.Join(",", columns) + " from " + objectName + " T) where row_num > " + ((page - 1) * itemCount) + " and row_num <= " + (page * itemCount)).Replace("'", '"' + "");
 
             var ObjectData = ExecuteSqlCommand(query);
             ObjectData.TableName = objectName;
+
+            if (type == "Table")
+            {
+                ObjectData.Columns["row_id"].ReadOnly = true;
+                ObjectData.Columns["row_num"].ReadOnly = true;
+            }
 
             return ObjectData;
         }
@@ -128,16 +154,18 @@ namespace DatabaseBrowser.DBHandlers
 
         public void SaveChanges(DataTable dataTable)
         {
-            foreach (DataRow row in dataTable.Rows)
+            foreach (DataRow row in dataTable?.Rows)
             {
                 for (int y = 0; y < dataTable.Columns.Count; y++)
                 {
-                    if (!row[y, DataRowVersion.Current].Equals(row[y, DataRowVersion.Original]))
+                    if (row.RowState == DataRowState.Modified
+                        && !row[y, DataRowVersion.Current].Equals(row[y, DataRowVersion.Original]))
                     {
                         UpdateRow(dataTable.TableName, dataTable.Columns[y].ColumnName, row["row_id"].ToString(), row[y]);
                     }
                 }
             }
+            dataTable.AcceptChanges();
         }
 
         private void UpdateRow(string tableName, string columnName, string rowId, object newValue)

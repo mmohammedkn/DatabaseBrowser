@@ -1,4 +1,6 @@
-﻿namespace DatabaseBrowser
+﻿using Krypton.Toolkit;
+
+namespace DatabaseBrowser
 {
     partial class AddNewConnectionFrm
     {
@@ -34,14 +36,16 @@
             this.txtUserId = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtSID = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.txtService = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtPort = new System.Windows.Forms.TextBox();
             this.txtHost = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSave = new KryptonButton();
+            this.btnCancel = new KryptonButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -97,6 +101,8 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.txtSID);
+            this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtService);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label4);
@@ -110,11 +116,27 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Server";
             // 
+            // txtSID
+            // 
+            this.txtSID.Location = new System.Drawing.Point(142, 95);
+            this.txtSID.Name = "txtSID";
+            this.txtSID.Size = new System.Drawing.Size(97, 20);
+            this.txtSID.TabIndex = 7;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(139, 79);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 13);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "SID :";
+            // 
             // txtService
             // 
             this.txtService.Location = new System.Drawing.Point(19, 95);
             this.txtService.Name = "txtService";
-            this.txtService.Size = new System.Drawing.Size(189, 20);
+            this.txtService.Size = new System.Drawing.Size(97, 20);
             this.txtService.TabIndex = 5;
             // 
             // label5
@@ -165,7 +187,7 @@
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 2;
             this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
+            //this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCancel
@@ -176,7 +198,7 @@
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
+            //this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // AddNewConnectionFrm
@@ -195,6 +217,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(285, 368);
             this.Name = "AddNewConnectionFrm";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "AddNewConnectionFrm";
             this.TopMost = true;
@@ -220,7 +243,9 @@
         private System.Windows.Forms.TextBox txtPort;
         private System.Windows.Forms.TextBox txtHost;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnCancel;
+        private KryptonButton btnSave;
+        private KryptonButton btnCancel;
+        private System.Windows.Forms.TextBox txtSID;
+        private System.Windows.Forms.Label label6;
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -78,7 +79,8 @@ namespace DatabaseBrowser
 
             dbConTab.treeObjects.Nodes.Add("table_name", "Tables");
             dbConTab.treeObjects.Nodes.Add("view_name", "Views");
-            dbConTab.treeObjects.Nodes.Add("view_name", "Packages");
+            dbConTab.treeObjects.Nodes.Add("package_name", "Packages");
+            dbConTab.treeObjects.Nodes.Add("user_name", "Users");
 
             foreach (TreeNode item in dbConTab.treeObjects.Nodes)
                 item.Nodes.Add("");
@@ -114,6 +116,8 @@ namespace DatabaseBrowser
                     objectsNames = dbConTab.dBHandler.GetViewNames();
                 else if (e.Node.Text == "Packages")
                     objectsNames = dbConTab.dBHandler.GetPackagesNames();
+                else if (e.Node.Text == "Users")
+                    objectsNames = dbConTab.dBHandler.GetUserNames();
 
                 this.BeginInvoke(new Action(() =>
                 {
@@ -195,16 +199,22 @@ namespace DatabaseBrowser
 
             this.BeginInvoke(new Action(() =>
             {
+                var pkgObjects = Regex.Match(sourceText, @"PROCEDURE|FUNCTION\s+(\w+)").Groups;
                 currentTabTB.Text = sourceText;
             }));
         }
 
-        private void LoadGridData(ListView gridControl, string objectName, string type)
+        private void LoadGridData(CustomListview gridControl, string objectName, string type)
         {
             GridInfo info = gridControl.Tag as GridInfo;
             DBConnectionTab dbConTab = tabDBConns.SelectedTab.Tag as DBConnectionTab;
 
-            var data = dbConTab.dBHandler.GetObjectData(objectName, info.CurrentPage, 25, type);
+            var data = dbConTab.dBHandler.GetObjectData(objectName, info.CurrentPage, 100, type);
+
+            if (data.Columns.Count == 0)
+            {
+                return;
+            }
 
             gridControl.BeginInvoke(new Action(() =>
             {

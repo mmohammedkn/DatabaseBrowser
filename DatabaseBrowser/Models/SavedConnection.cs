@@ -53,5 +53,10 @@ namespace DatabaseBrowser
 
             return SavedConnections;
         }
+
+        public override string ToString()
+        {
+            return UserId + "@" + Host + "/" + (Service != null ? Service : SID);
+        }
     }
 }
